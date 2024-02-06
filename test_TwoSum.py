@@ -14,8 +14,11 @@ class TestSolution(unittest.TestCase):
         for nums, target, expected in test_cases:
             with self.subTest(nums=nums, target=target, expected=expected):
                 result = solution.twoSum(nums, target)
-                self.assertListEqual(result, expected,
-                                     f"Failed for nums: {nums} with target: {target}. Expected: {expected}, got: {result}")
+                self.assertListEqual(
+                    result,
+                    expected,
+                 f"Failed for nums: {nums} with target: {target}. Expected: {expected}, got: {result}"
+                )
 
     def test_two_sum_no_return_value(self):
         solution = Solution()
