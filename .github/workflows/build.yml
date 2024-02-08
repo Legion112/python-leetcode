@@ -39,6 +39,8 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ needs.setup.outputs.cache-key }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
       - name: Analyzing the code with pylint
         run: |
           pylint --disable=C0103,C0114,C0115,C0116,R0903,C0301 $(git ls-files '*.py')
@@ -57,6 +59,8 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ needs.setup.outputs.cache-key }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
       - name: Lint with flake8
         run: |
           flake8 . --exclude=.venv --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -76,6 +80,8 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ needs.setup.outputs.cache-key }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
       - name: Test with pytest
         run: |
           pytest
