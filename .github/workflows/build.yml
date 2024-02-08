@@ -5,15 +5,13 @@ on: [push]
 jobs:
   setup:
     runs-on: ubuntu-latest
+    container: 
+      image: python:3.12.0-slim
+      options: --user root
     outputs:
       cache-key: ${{ steps.cache-key.outputs.key }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12.0'
       - id: cache-key
         name: Generate cache key
         run: echo "::set-output name=key::$(echo pip-${{ hashFiles('**/requirements.txt') }})"
@@ -28,12 +26,11 @@ jobs:
   pylint:
     needs: setup
     runs-on: ubuntu-latest
+    container: 
+      image: python:3.12.0-slim
+      options: --user root
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12.0"
       - name: Cache pip packages
         uses: actions/cache@v4
         with:
@@ -48,12 +45,11 @@ jobs:
   flake8:
     needs: setup
     runs-on: ubuntu-latest
+    container: 
+      image: python:3.12.0-slim
+      options: --user root
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12.0"
       - name: Cache pip packages
         uses: actions/cache@v4
         with:
@@ -69,12 +65,11 @@ jobs:
   test:
     needs: setup
     runs-on: ubuntu-latest
+    container: 
+      image: python:3.12.0-slim
+      options: --user root
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12.0"
       - name: Cache pip packages
         uses: actions/cache@v4
         with:
