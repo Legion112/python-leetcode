@@ -13,19 +13,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # New step to compute the short SHA
-      - id: set_image_tag
-        name: Set Docker image tag
+      - id: set_short_sha
+        name: Compute short SHA and set as output
         run: |
-          SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
-          echo "image_tag=${{ env.IMAGE_NAME }}:$SHORT_SHA" >> $GITHUB_ENV
-          echo "::set-output name=image_tag=${{ env.IMAGE_NAME }}:$SHORT_SHA"
-      - id: cache-key
-        name: Generate cache key
-        run: echo "::set-output name=key::$(echo pip-${{ hashFiles('**/requirements.txt') }})"
+          echo "short_sha=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+          echo "short_sha=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+
+      - id: cache_key
+        name: Generate cache key and set as output
+        run: |
+          echo "cache_key=pip-$(echo ${{ hashFiles('**/requirements.txt') }})" >> $GITHUB_ENV
+          echo "cache_key=pip-$(echo ${{ hashFiles('**/requirements.txt') }})" >> $GITHUB_OUTPUT
+
       - name: Build Docker image
         env:
           DOCKER_BUILDKIT: 1
-        run: docker build . --tag ${{ steps.set_image_tag.outputs.image_tag }}
+        run: docker build . --tag ${{ env.IMAGE_NAME }}:${{ env.short_sha }}
       - name: Cache pip packages
         uses: actions/cache@v2
         with:
