@@ -8,9 +8,6 @@ env:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    container: 
-      image: python:3.12.0-slim
-      options: --user root
     outputs:
       cache-key: ${{ steps.cache-key.outputs.key }}
     steps:
