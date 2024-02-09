@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       cache-key: ${{ steps.cache_key.outputs.key }}
-      image-tag: ${{ steps.set_image_tag.outputs.image_tag }} # Adjusted to include the full image name and tag
+      image_tag: ${{ steps.set_image_tag.outputs.image_tag }} # Adjusted to include the full image name and tag
     steps:
       - uses: actions/checkout@v4
       # New step to compute the short SHA
@@ -56,13 +56,13 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Analyzing the code with pylint
         run: |
-          docker run --rm ${{ needs.setup.outputs.image-tag }} pylint --disable=C0103,C0114,C0115,C0116,R0903,C0301 --ignore='.venv' --recursive=y .
+          docker run --rm ${{ needs.setup.outputs.image_tag }} pylint --disable=C0103,C0114,C0115,C0116,R0903,C0301 --ignore='.venv' --recursive=y .
 
   flake8:
     needs: setup
     runs-on: ubuntu-latest
     container: 
-      image: ${{ needs.setup.outputs.image-tag }}
+      image: ${{ needs.setup.outputs.image_tag }}
     steps:
       - name: Lint with flake8
         run: |
@@ -73,7 +73,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container: 
-      image: ${{ needs.setup.outputs.image-tag }}
+      image: ${{ needs.setup.outputs.image_tag }}
     steps:
       - name: Test with pytest
         run: |
