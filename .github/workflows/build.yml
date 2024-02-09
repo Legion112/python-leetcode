@@ -8,7 +8,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      cache-key: ${{ steps.cache-key.outputs.key }}
+      cache-key: ${{ steps.cache_key.outputs.key }}
       image-tag: ${{ steps.set_image_tag.outputs.image_tag }} # Adjusted to include the full image name and tag
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ steps.cache-key.outputs.key }}
+          key: ${{ steps.cache_key.outputs.key }}
       - name: Install dependencies
         run: pip install -r requirements.txt
 
