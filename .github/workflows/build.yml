@@ -8,21 +8,24 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      short-sha: ${{ steps.set_short_sha.outputs.short_sha }} # Set the output to be used by other jobs
       cache-key: ${{ steps.cache-key.outputs.key }}
+      image-tag: ${{ steps.set_image_tag.outputs.image_tag }} # Adjusted to include the full image name and tag
     steps:
       - uses: actions/checkout@v4
       # New step to compute the short SHA
-      - id: set_short_sha
-        name: Compute short SHA
-        run: echo "short_sha=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+      - id: set_image_tag
+        name: Set Docker image tag
+        run: |
+          SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          echo "image_tag=${{ env.IMAGE_NAME }}:$SHORT_SHA" >> $GITHUB_ENV
+          echo "::set-output name=image_tag=${{ env.IMAGE_NAME }}:$SHORT_SHA"
       - id: cache-key
         name: Generate cache key
         run: echo "::set-output name=key::$(echo pip-${{ hashFiles('**/requirements.txt') }})"
       - name: Build Docker image
         env:
           DOCKER_BUILDKIT: 1
-        run: docker build . --tag $IMAGE_NAME:$SHORT_SHA
+        run: docker build . --tag ${{ steps.set_image_tag.outputs.image_tag }}
       - name: Cache pip packages
         uses: actions/cache@v2
         with:
@@ -35,7 +38,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container: 
-      image: ${{ env.IMAGE_NAME }}:${{ needs.setup.outputs.short-sha }}
+      image: ${{ needs.setup.outputs.image-tag }}
       options: --user root
     steps:
       - name: Analyzing the code with pylint
@@ -46,7 +49,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container: 
-      image: ${{ env.IMAGE_NAME }}:${{ needs.setup.outputs.short-sha }}
+      image: ${{ needs.setup.outputs.image-tag }}
       options: --user root
     steps:
       - name: Lint with flake8
@@ -58,7 +61,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container: 
-      image: ${{ env.IMAGE_NAME }}:${{ needs.setup.outputs.short-sha }}
+      image: ${{ needs.setup.outputs.image-tag }}
       options: --user root
     steps:
       - name: Test with pytest
