@@ -31,17 +31,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build Docker image
-        env:
-          DOCKER_BUILDKIT: 1
-        run: docker build . --tag ${{ env.IMAGE_NAME }}:${{ env.short_sha }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.short_sha }}
       - name: Cache pip packages
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
           key: ${{ env.cache_key }}
-      - name: Push Docker image
-        run: docker push ${{ env.IMAGE_NAME }}:${{ steps.set_short_sha.outputs.short_sha }}
 
   pylint:
     needs: setup
