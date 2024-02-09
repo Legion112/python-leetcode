@@ -3,7 +3,7 @@ name: Python CI
 on: [push]
 
 env:
-  IMAGE_NAME: legion112/python-leetcode
+  IMAGE_NAME: ghcr.io/legion112/python-leetcode
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -25,6 +25,12 @@ jobs:
           echo "cache_key=pip-$(echo ${{ hashFiles('**/requirements.txt') }})" >> $GITHUB_ENV
           echo "cache_key=pip-$(echo ${{ hashFiles('**/requirements.txt') }})" >> $GITHUB_OUTPUT
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker image
         env:
           DOCKER_BUILDKIT: 1
@@ -34,8 +40,8 @@ jobs:
         with:
           path: ~/.cache/pip
           key: ${{ env.cache_key }}
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Push Docker image
+        run: docker push ${{ env.IMAGE_NAME }}:${{ steps.set_short_sha.outputs.short_sha }}
 
   pylint:
     needs: setup
