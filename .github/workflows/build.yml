@@ -47,12 +47,10 @@ jobs:
   pylint:
     needs: setup
     runs-on: ubuntu-latest
-    container:
-      image: ${{ needs.setup.outputs.image-tag }}
     steps:
       - name: Analyzing the code with pylint
         run: |
-          pylint --disable=C0103,C0114,C0115,C0116,R0903,C0301 --ignore='.venv' --recursive=y .
+          docker run --rm ${{ needs.setup.outputs.image-tag }} pylint --disable=C0103,C0114,C0115,C0116,R0903,C0301 --ignore='.venv' --recursive=y .
 
   flake8:
     needs: setup
