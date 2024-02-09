@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ steps.cache_key.outputs.key }}
+          key: ${{ env.cache_key }}
       - name: Install dependencies
         run: pip install -r requirements.txt
 
