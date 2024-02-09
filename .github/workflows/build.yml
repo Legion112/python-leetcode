@@ -4,14 +4,18 @@ on: [push]
 
 env:
   IMAGE_NAME: your-username/your-image-name
-  SHORT_SHA: ${{ substr(github.sha, 0, 7) }}
 jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
+      short-sha: ${{ steps.set_short_sha.outputs.short_sha }} # Set the output to be used by other jobs
       cache-key: ${{ steps.cache-key.outputs.key }}
     steps:
       - uses: actions/checkout@v4
+      # New step to compute the short SHA
+      - id: set_short_sha
+        name: Compute short SHA
+        run: echo "short_sha=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
       - id: cache-key
         name: Generate cache key
         run: echo "::set-output name=key::$(echo pip-${{ hashFiles('**/requirements.txt') }})"
@@ -31,7 +35,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container: 
-      image: $IMAGE_NAME:$SHORT_SHA
+      image: ${{ env.IMAGE_NAME }}:${{ needs.setup.outputs.short-sha }}
       options: --user root
     steps:
       - name: Analyzing the code with pylint
@@ -42,7 +46,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container: 
-      image: $IMAGE_NAME:$SHORT_SHA
+      image: ${{ env.IMAGE_NAME }}:${{ needs.setup.outputs.short-sha }}
       options: --user root
     steps:
       - name: Lint with flake8
@@ -54,7 +58,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     container: 
-      image: $IMAGE_NAME:$SHORT_SHA
+      image: ${{ env.IMAGE_NAME }}:${{ needs.setup.outputs.short-sha }}
       options: --user root
     steps:
       - name: Test with pytest
