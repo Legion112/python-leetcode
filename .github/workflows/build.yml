@@ -3,7 +3,7 @@ name: Python CI
 on: [push]
 
 env:
-  IMAGE_NAME: your-username/your-image-name
+  IMAGE_NAME: legion112/python-leetcode
 jobs:
   setup:
     runs-on: ubuntu-latest
