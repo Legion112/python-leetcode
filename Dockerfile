@@ -2,12 +2,12 @@
 FROM python:3.12.0-slim as builder
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --requirement requirements.txt
+RUN pip install --user -r requirements.txt
 
 # Second stage: Copy installed packages and your code
 FROM python:3.12.0-slim
 WORKDIR /app
-COPY --from=builder /app /app
+COPY --from=builder /root/.local /root/.local
 COPY . .
 
 # Ensure scripts in .local are callable

@@ -1,0 +1,9 @@
+.git
+.github
+.gitignore
+.nenv
+.dockerignore
+.idea
+.pytest_cache
+Dockerfile
+__pycache__
