@@ -11,4 +11,3 @@ class Solution:
             if matched:
                 return startIndex
         return -1
-

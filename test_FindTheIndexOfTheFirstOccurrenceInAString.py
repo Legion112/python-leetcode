@@ -1,5 +1,7 @@
 import pytest
 from FindTheIndexOfTheFirstOccurrenceInAString import Solution
+
+
 @pytest.mark.parametrize("haystack,needle,expected", [
     ("sadbutsad", "sad", 0),
     ("leetcode", "leeto", -1),

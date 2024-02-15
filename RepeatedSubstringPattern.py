@@ -7,6 +7,3 @@ class Solution:
             if s == (substring * (len(s) // length)):
                 return True
         return False
-
-
-

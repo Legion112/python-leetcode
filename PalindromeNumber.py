@@ -6,10 +6,10 @@ class Solution:
 
         while number != 0:
             leading = number // divisor
-            trailing = number %  10
+            trailing = number % 10
             if leading != trailing:
                 return False
             number = (number % divisor) // 10
-            divisor /= 100 # removing two digits
+            divisor /= 100  # removing two digits
 
         return True

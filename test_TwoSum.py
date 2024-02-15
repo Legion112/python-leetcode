@@ -11,7 +11,8 @@ from TwoSum import Solution
 def test_two_sum(nums, target, expected):
     solution = Solution()
     result = solution.twoSum(nums, target)
-    assert result == expected, f"Failed for nums: {nums} with target: {target}. Expected: {expected}, got: {result}"
+    assert result == expected, f"Failed for nums: {nums} with target: {
+        target}. Expected: {expected}, got: {result}"
 
 
 def test_two_sum_no_return_value():
